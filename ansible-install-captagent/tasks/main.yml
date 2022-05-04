@@ -1,0 +1,12 @@
+---
+# tasks file for ansible-install-captagent
+- import_tasks: install-captagent.yml
+  tags:
+    - install-captagent
+- import_tasks: copy-config-file.yml
+  tags:
+    - copy-config-file
+- import_tasks: restart-captagent.yml
+  tags:
+    - restart-captagent
+...

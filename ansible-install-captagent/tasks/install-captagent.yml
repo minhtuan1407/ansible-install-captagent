@@ -1,0 +1,79 @@
+---
+- name: Install dependencies captagent for Debian 9
+  apt:
+    name:
+    - libexpat1-dev
+    - libpcap-dev
+    - libjson-c-dev
+    - libtool
+    - automake
+    - flex
+    - bison
+    - libgcrypt11-dev
+    - libuv1-dev
+    - git
+    - make
+    - libpcre3-dev
+    state: present
+  when: ansible_distribution == 'Debian' and ansible_distribution_major_version == '9'
+- name: Install dependencies captagent for Debian 10
+  apt:
+    name:
+    - libexpat1-dev
+    - libpcap-dev
+    - libjson-c-dev
+    - libtool
+    - automake
+    - flex
+    - bison
+    - libuv1-dev
+    - git
+    - make
+    - libpcre3-dev
+    state: present
+  when: ansible_distribution == 'Debian' and ansible_distribution_major_version == '10'
+- name: Install dependencies captagent for CentOS 7
+  yum:
+    name:
+    - json-c-devel
+    - expat-devel
+    - libpcap-devel
+    - flex-devel
+    - automake
+    - libtool
+    - bison
+    - libuv-devel
+    - flex
+    - pcre-devel
+    - git
+    state: present
+  when: ansible_distribution == 'CentOS'
+- name: Check that is captagent is exists
+  stat:
+    path: /usr/local/captagent/sbin/captagent
+  register: captagent_exist
+- name: Clone captagent repo from git
+  git:
+    repo: https://github.com/sipcapture/captagent.git
+    dest: /usr/src/captagent
+  when: not captagent_exist.stat.exists
+- name: Build captagent
+  shell:
+    cmd: bash ./build.sh
+    chdir: /usr/src/captagent
+  when: not captagent_exist.stat.exists
+- name: Configure captagent
+  shell:
+    cmd: bash ./configure
+    chdir: /usr/src/captagent
+  when: not captagent_exist.stat.exists
+- name: Make captagent
+  make:
+    chdir: /usr/src/captagent
+  when: not captagent_exist.stat.exists
+- name: Make install captagent
+  make:
+    chdir: /usr/src/captagent
+    target: install
+  when: not captagent_exist.stat.exists
+...

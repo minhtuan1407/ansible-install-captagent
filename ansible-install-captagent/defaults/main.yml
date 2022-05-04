@@ -1,0 +1,5 @@
+---
+# defaults file for ansible-install-captagent
+sip_portrange: "5060-50062"
+sip_tcp_portrange: "5061"
+rtcp_portrange_and_len: "portrange 10000-30000 and len >=50"

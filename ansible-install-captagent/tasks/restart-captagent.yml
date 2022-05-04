@@ -1,0 +1,33 @@
+---
+- name: Copy systemd file captagent.service for Debian or Ubuntu
+  copy:
+    src: debian-captagent.service
+    dest: /etc/systemd/system/captagent.service
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+- name: Copy default file captagent.default for Debian or Ubuntu
+  copy:
+    src: captagent.default
+    dest: /etc/default/captagent
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+- name: Copy systemd file captagent.service for CentOS
+  copy:
+    src: centos-captagent.service
+    dest: /etc/systemd/system/captagent.service
+  when: ansible_distribution == 'CentOS'
+- name: Copy default file captagent.sysconfig for CentOS
+  copy:
+    src: captagent.sysconfig
+    dest: /etc/sysconfig/captagent
+  when: ansible_distribution == 'CentOS'
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+- name: Enable captagent
+  systemd:
+    name: captagent
+    enabled: yes
+- name: Restart captagent
+  systemd:
+    name: captagent
+    state: restarted
+...

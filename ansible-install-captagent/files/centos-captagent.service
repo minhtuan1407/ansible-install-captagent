@@ -1,0 +1,13 @@
+[Unit]
+Description=SIP capture agent server daemon
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/sysconfig/captagent
+ExecStart=/usr/local/captagent/sbin/captagent -f $CFG_FILE -d
+PIDFile=/var/run/captagent.pid
+Restart=always
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

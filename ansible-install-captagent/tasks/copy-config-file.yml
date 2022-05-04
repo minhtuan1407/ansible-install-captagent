@@ -1,0 +1,38 @@
+---
+- name: Copy systemd file captagent.service for Debian or Ubuntu
+  copy:
+    src: debian-captagent.service
+    dest: /etc/systemd/system/captagent.service
+  when: ansible_distribution == 'Debian'
+- name: Copy default file captagent.default for Debian or Ubuntu
+  copy:
+    src: captagent.default
+    dest: /etc/default/captagent
+  when: ansible_distribution == 'Debian'
+- name: Copy systemd file captagent.service for CentOS
+  copy:
+    src: centos-captagent.service
+    dest: /etc/systemd/system/captagent.service
+  when: ansible_distribution == 'CentOS'
+- name: Copy default file captagent.sysconfig for CentOS
+  copy:
+    src: captagent.sysconfig
+    dest: /etc/sysconfig/captagent
+  when: ansible_distribution == 'CentOS'
+- name: Copy config file socket_pcap
+  template:
+    src: socket_pcap-xml.j2
+    dest: /usr/local/captagent/etc/captagent/socket_pcap.xml
+- name: Copy config file sip_capture_plan
+  copy:
+    src: sip_capture_plan.cfg
+    dest: /usr/local/captagent/etc/captagent/captureplans/sip_capture_plan.cfg
+- name: Copy config file transport_hep
+  template:
+    src: transport_hep-xml.j2
+    dest: /usr/local/captagent/etc/captagent/transport_hep.xml
+  notify:
+    - reload systemd
+    - restart captagent
+    - enable captagent
+...
